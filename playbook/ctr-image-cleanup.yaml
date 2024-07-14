@@ -1,0 +1,7 @@
+---
+- name: clean docker
+  hosts: "debian"
+  tasks:
+    - name: prune  images
+      command: crictl rmi --prune
+      become: true

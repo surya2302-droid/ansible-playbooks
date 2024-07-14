@@ -1,0 +1,7 @@
+---
+- name: db-backup
+  hosts: "alpine"
+  tasks:
+    - name: db-backup
+      command: bash /home/surya/dbbackup.sh
+      become: true

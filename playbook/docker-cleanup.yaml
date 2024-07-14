@@ -1,0 +1,7 @@
+---
+- name: clean docker
+  hosts: "alpine"
+  tasks:
+    - name: prune non-dangling images
+      command: docker system prune -a --force
+      become: true

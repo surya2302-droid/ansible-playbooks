@@ -1,0 +1,29 @@
+
+- name: aws-glacier-backup
+  vars:
+    aes_encryption_pass_phrase: yourEncryptionPassword
+    folder_path:  path/to/your/directory/
+  hosts: "surya"
+  tasks:
+    - name: ntfy1
+      command: curl -d "backup process initiated |  creating the tar" https://ntfy.local.suryahosted.in/server
+    - name: create tar
+      command: tar -czf {{ folder_path }}.tar {{ folder_path }}
+    - name: ntfy2
+      command: curl -d "tar file created | encrypting the tar" https://ntfy.local.suryahosted.in/server
+    - name: encrypting the tar file
+      command: gpg --pinentry-mode=loopback --symmetric --cipher-algo aes256 --passphrase "{{ aes_encryption_pass_phrase }}" --quiet {{ folder_path }}.tar 
+    - name: ntfy3
+      command: curl -d "backup encrypted with aes 256 | deleting the tar file" https://ntfy.local.suryahosted.in/server
+    - name: deleting the tar file
+      command: rm -rf  {{ folder_path }}.tar
+    - name: ntfy4
+      command: curl -d "tar file deleted| procedding to upload" https://ntfy.local.suryahosted.in/server
+    - name: uploading to aws glacier
+      command: aws s3 cp {{ folder_path }}.tar.gpg  s3://surya-home-lab-backup-storage --storage-class=DEEP_ARCHIVE 
+    - name: ntfy5
+      command: curl -d "upload finished | deleting gpg file" https://ntfy.local.suryahosted.in/server
+    - name: deleting the encrypted file
+      command: rm -rf  {{ folder_path }}.tar.gpg 
+    - name: ntfy5
+      command: curl -d "BACKUP COMPLETED for {{ folder_path }} " https://ntfy.local.suryahosted.in/server
