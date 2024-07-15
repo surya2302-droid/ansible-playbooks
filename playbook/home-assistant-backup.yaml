@@ -1,0 +1,6 @@
+---
+- name: home-assistant-backup
+  hosts: "surya"
+  tasks:
+    - name: copying backup
+      command:  scp -r -P 23 root@192.168.0.38:/backup  /home/surya/home-assistant/backup
