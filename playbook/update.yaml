@@ -1,4 +1,4 @@
-- hosts: "debian,dell,omv"
+- hosts: all
   become: yes
   tasks:
     - name: apt
